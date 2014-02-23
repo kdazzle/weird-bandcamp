@@ -1,0 +1,2 @@
+pymongo
+git+https://github.com/kdazzle/py-trello.git
