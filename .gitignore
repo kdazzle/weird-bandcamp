@@ -37,3 +37,6 @@ nosetests.xml
 
 # Meteor
 .meteor
+
+#Config
+server/config.ini
