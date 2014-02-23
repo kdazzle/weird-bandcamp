@@ -9,7 +9,7 @@ def import_submissions():
     cards = get_trello_cards()
 
     submissions = []
-    for index, card in enumerate(cards):
+    for card in cards:
         try:
             submission = get_submission_from_card(card)
             submissions.append(submission.__dict__)
@@ -45,7 +45,7 @@ def get_submission_from_card(card):
     :param card:
     :return: Submission
     """
-    description = getattr(card, 'description', None)
+    description = getattr(card, 'description', '')
     bandcamp_uri = extract_bandcamp_url(description)
 
     if not bandcamp_uri:
@@ -83,10 +83,13 @@ def insert_submissions_into_db(submissions):
     :param submissions: a list of Weird Canada submissions
     """
     mongo_host = os.environ.get('MONGO_HOST')
-    mongo_port = os.environ.get('MONGO_PORT')
+    mongo_port = int(os.environ.get('MONGO_PORT'))
     mongo_client = MongoClient(mongo_host, mongo_port)
 
     db = mongo_client.wyrd_bandcamp
+    db.authenticate(os.environ.get('MONGO_USER'), os.environ.get('MONGO_PASSWORD'))
+
+    db.submissions.remove()  # Delete all existing entries
     inserted_submissions = db.submissions.insert(submissions)
 
     print 'total number of submissions: ', len(submissions)
