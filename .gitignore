@@ -36,7 +36,9 @@ nosetests.xml
 .pydevproject
 
 # Meteor
-.meteor
+#.meteor
 
 #Config
 server/config.ini
+
+env/
